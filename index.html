@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+</head>
+<body>
+
+    <?php
+    include_once ("navbar.html");
+    include_once ("api.php");
+    $headers=[
+      "accept: application/json" ,
+      "apikey: 40ph9uyta7ivtf6054wkugtq8jxlgws3"
+  ];
+  $try_1="";
+?>
+<div class=filter_box>
+<form id="form1" method="post" action=''>
+<span class="filter_1">
+<label for="123">Please Choose First Status:</label>
+
+<select  id="status_1" name="status_1"  value='workselected' >
+  <option value="">Select Status</option>
+  <option value="all">All</option>
+  <option value="I">Init</option>
+  <option value="N">New</option>
+  <option value="T">Chatting</option>
+  <option value="P">Calling</option>
+  <option value="R">Resolved</option>
+  <option value="X">Deleted</option>
+  <option value="B">Spam</option>
+  <option value="C">Answered</option>
+  <option value="W">Postponed</option>
+</select>
+</span>
+<span class="filter_2">
+<label for="1234">Please Choose Second Status:</label>
+<select  id="status_2" name="status_2" >
+  <option value="" selected>Select Status</option>
+  <option value="all" >All</option>
+  <option value="I">Init</option>
+  <option value="N">New</option>
+  <option value="T">Chatting</option>
+  <option value="P">Calling</option>
+  <option value="R">Resolved</option>  
+  <option value="X">Deleted</option>
+  <option value="B">Spam</option>
+  <option value="C">Answered</option>
+  <option value="W">Postponed</option>
+</select>
+</span>
+<span class="filter_3">
+<label> Please Choose the Starting Date: </label>
+<input type="date" class="dateFrom" name="dateFrom" value="<?php $myDate = date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) ); echo $myDate;?>" />
+</span>
+<span class="filter_4">
+<label> Please Choose the End Date: </label>
+<input type="date" class="dateTo" name="dateTo" value="<?php $date = date('Y-m-d'); echo $date;?>" />
+</span>
+<span class="filter_button">
+<input type="submit" id="filter_button"class="btn btn-primary btn-lg btn-block" value="Filter" />
+</span>
+</form>
+</div>
+<?php
+
+if(isset($_POST['dateFrom']) && isset($_POST['dateTo'])){
+          $dateFrom = date('Y-m-d', strtotime($_POST['dateFrom']));
+          $dateTo = date('Y-m-d', strtotime($_POST['dateTo']));
+  }else{
+      $dateFrom="2022-01-26";
+      $dateTo="2022-09-30";
+  }
+
+  
+$all_data1=array();
+$all_data2=array();
+$total_number1=array();
+$total_number2=array();
+if(isset($_POST['status_1'])){
+    if($_REQUEST['status_1'] != "all"){
+    $try_1 = $_REQUEST['status_1'];
+    $ch=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=1&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch2=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=2&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch3=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=3&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch4=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=4&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch5=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=5&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch6=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=6&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_1}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    $reponse=curl_exec($ch);
+    curl_exec($ch);
+    curl_close($ch);
+    $data=json_decode($reponse,true);
+    // // var_dump($data);
+
+    curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch2,CURLOPT_RETURNTRANSFER,true);
+    $reponse2=curl_exec($ch2);
+    curl_exec($ch2);
+    curl_close($ch2);
+    $data2=json_decode($reponse2,true);
+
+    curl_setopt($ch3, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch3,CURLOPT_RETURNTRANSFER,true);
+    $reponse3=curl_exec($ch3);
+    curl_exec($ch3);
+    curl_close($ch3);
+    $data3=json_decode($reponse3,true);
+
+    curl_setopt($ch4, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch4,CURLOPT_RETURNTRANSFER,true);
+    $reponse4=curl_exec($ch4);
+    curl_exec($ch4);
+    curl_close($ch4);
+    $data4=json_decode($reponse4,true);
+
+    curl_setopt($ch5, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch5,CURLOPT_RETURNTRANSFER,true);
+    $reponse5=curl_exec($ch5);
+    curl_exec($ch5);
+    curl_close($ch5);
+    $data5=json_decode($reponse5,true);
+
+    curl_setopt($ch6, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch6,CURLOPT_RETURNTRANSFER,true);
+    $reponse6=curl_exec($ch6);
+    curl_exec($ch6);
+    curl_close($ch6);
+    $data6=json_decode($reponse6,true);
+    $merge_array=array_merge($data,$data2,$data3,$data4,$data5,$data6);
+    $data_selected1=$merge_array;
+    // $data_selected1=$data;
+    // var_dump($data_selected1);
+
+    
+    foreach($agent_report as $agents){
+        $temp_count1=array();
+        $agents=$agents['id'];
+        foreach($data_selected1 as $data_){
+        if(@$data_['agentid'] === $agents){
+        if (array_key_exists("agentid",$data_)){
+        if($data_['agentid'] === $agents){
+            array_push($temp_count1,$data_);
+        }}
+    }
+    }array_push($total_number1,count($temp_count1));
+    array_push($all_data1,$temp_count1);
+    }}
+    elseif($_REQUEST['status_1'] == "all"){
+    $ch=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=1&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch2=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=2&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch3=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=3&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch4=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=4&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch5=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=5&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    $ch6=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=6&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    $reponse=curl_exec($ch);
+    curl_exec($ch);
+    curl_close($ch);
+    $data=json_decode($reponse,true);
+    // var_dump($data);
+
+    curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch2,CURLOPT_RETURNTRANSFER,true);
+    $reponse2=curl_exec($ch2);
+    curl_exec($ch2);
+    curl_close($ch2);
+    $data2=json_decode($reponse2,true);
+
+    curl_setopt($ch3, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch3,CURLOPT_RETURNTRANSFER,true);
+    $reponse3=curl_exec($ch3);
+    curl_exec($ch3);
+    curl_close($ch3);
+    $data3=json_decode($reponse3,true);
+
+    curl_setopt($ch4, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch4,CURLOPT_RETURNTRANSFER,true);
+    $reponse4=curl_exec($ch4);
+    curl_exec($ch4);
+    curl_close($ch4);
+    $data4=json_decode($reponse4,true);
+
+    curl_setopt($ch5, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch5,CURLOPT_RETURNTRANSFER,true);
+    $reponse5=curl_exec($ch5);
+    curl_exec($ch5);
+    curl_close($ch5);
+    $data5=json_decode($reponse5,true);
+
+    curl_setopt($ch6, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch6,CURLOPT_RETURNTRANSFER,true);
+    $reponse6=curl_exec($ch6);
+    curl_exec($ch6);
+    curl_close($ch6);
+    $data6=json_decode($reponse6,true);
+    $merge_array=array_merge($data,$data2,$data3,$data4,$data5,$data6);
+    $data_selected1=$merge_array;
+    // var_dump($data_selected1);
+    // $data_selected1=$data;
+
+    
+    foreach($agent_report as $agents){
+        $temp_count1=array();
+        $agents=$agents['id'];
+        foreach($data_selected1 as $data_){
+        if(@$data_['agentid'] === $agents){
+        if (array_key_exists("agentid",$data_)){
+        if($data_['agentid'] === $agents){
+            array_push($temp_count1,$data_);
+        }}
+    }
+    }array_push($total_number1,count($temp_count1));
+    array_push($all_data1,$temp_count1);
+    }}
+
+
+    if(isset($_POST['status_2'])){
+        if($_REQUEST['status_2'] != "all"){
+        $try_2 = $_REQUEST['status_2'];
+        $ch=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=1&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch2=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=2&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch3=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=3&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch4=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=4&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch5=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=5&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch6=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=6&_perPage=1000&_filters=[[%22status%22,%22%3D%22,%22{$try_2}%22],[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        $reponse=curl_exec($ch);
+        curl_exec($ch);
+        curl_close($ch);
+        $data=json_decode($reponse,true);
+        // var_dump($data);
+    
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch2,CURLOPT_RETURNTRANSFER,true);
+        $reponse2=curl_exec($ch2);
+        curl_exec($ch2);
+        curl_close($ch2);
+        $data2=json_decode($reponse2,true);
+    
+        curl_setopt($ch3, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch3,CURLOPT_RETURNTRANSFER,true);
+        $reponse3=curl_exec($ch3);
+        curl_exec($ch3);
+        curl_close($ch3);
+        $data3=json_decode($reponse3,true);
+    
+        curl_setopt($ch4, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch4,CURLOPT_RETURNTRANSFER,true);
+        $reponse4=curl_exec($ch4);
+        curl_exec($ch4);
+        curl_close($ch4);
+        $data4=json_decode($reponse4,true);
+    
+        curl_setopt($ch5, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch5,CURLOPT_RETURNTRANSFER,true);
+        $reponse5=curl_exec($ch5);
+        curl_exec($ch5);
+        curl_close($ch5);
+        $data5=json_decode($reponse5,true);
+    
+        curl_setopt($ch6, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch6,CURLOPT_RETURNTRANSFER,true);
+        $reponse6=curl_exec($ch6);
+        curl_exec($ch6);
+        curl_close($ch6);
+        $data6=json_decode($reponse6,true);
+        $merge_array=array_merge($data,$data2,$data3,$data4,$data5,$data6);
+        $data_selected2=$merge_array;
+        // var_dump($data_selected2);
+        // $data_selected2=$data;
+        
+        foreach($agent_report as $agents){
+            $temp_count2=array();
+            $agents=$agents['id'];
+            foreach($data_selected2 as $data_){
+            if(@$data_['agentid'] === $agents){
+            if (array_key_exists("agentid",$data_)){
+            if($data_['agentid'] === $agents){
+                array_push($temp_count2,$data_);
+            }}
+        }
+        }array_push($total_number2,count($temp_count2));
+        array_push($all_data2,$temp_count2);
+        }}
+        elseif($_REQUEST['status_2'] == "all"){
+        $ch=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=1&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch2=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=2&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch3=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=3&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch4=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=4&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch5=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=5&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        $ch6=curl_init("https://manyagroup.ladesk.com/api/v3/tickets/?_sortField=date_created&_sortDir=ASC&_page=6&_perPage=1000&_filters=[[%22date_created%22,%22%3E%22,%22{$dateFrom}%22],[%22date_created%22,%22%3C%22,%22{$dateTo}%22]]");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        $reponse=curl_exec($ch);
+        curl_exec($ch);
+        curl_close($ch);
+        $data=json_decode($reponse,true);
+        // var_dump($data);
+    
+        curl_setopt($ch2, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch2,CURLOPT_RETURNTRANSFER,true);
+        $reponse2=curl_exec($ch2);
+        curl_exec($ch2);
+        curl_close($ch2);
+        $data2=json_decode($reponse2,true);
+    
+        curl_setopt($ch3, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch3,CURLOPT_RETURNTRANSFER,true);
+        $reponse3=curl_exec($ch3);
+        curl_exec($ch3);
+        curl_close($ch3);
+        $data3=json_decode($reponse3,true);
+    
+        curl_setopt($ch4, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch4,CURLOPT_RETURNTRANSFER,true);
+        $reponse4=curl_exec($ch4);
+        curl_exec($ch4);
+        curl_close($ch4);
+        $data4=json_decode($reponse4,true);
+    
+        curl_setopt($ch5, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch5,CURLOPT_RETURNTRANSFER,true);
+        $reponse5=curl_exec($ch5);
+        curl_exec($ch5);
+        curl_close($ch5);
+        $data5=json_decode($reponse5,true);
+    
+        curl_setopt($ch6, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch6,CURLOPT_RETURNTRANSFER,true);
+        $reponse6=curl_exec($ch6);
+        curl_exec($ch6);
+        curl_close($ch6);
+        $data6=json_decode($reponse6,true);
+        $merge_array=array_merge($data,$data2,$data3,$data4,$data5,$data6);
+        $data_selected2=$merge_array;
+        // var_dump($data_selected1);
+        // $data_selected2=$data;
+        
+        foreach($agent_report as $agents){
+            $temp_count2=array();
+            $agents=$agents['id'];
+            foreach($data_selected2 as $data_){
+            if(@$data_['agentid'] === $agents){
+            if (array_key_exists("agentid",$data_)){
+            if($data_['agentid'] === $agents){
+                array_push($temp_count2,$data_);
+            }}
+        }
+        }array_push($total_number2,count($temp_count2));
+        array_push($all_data2,$temp_count2);
+        }}
+}
+$new_array=array_merge($all_data1["0"],$all_data1["1"],$all_data2['0'],$all_data2['1']);
+$unique=array_unique($new_array, SORT_REGULAR);
+}
+
+
+?>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+      
+      $('#status_1').val("<?php echo $try_1 ?>");
+      $('#status_2').val("<?php echo $try_2 ?>");
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Agents', '<?php 
+        if(isset($_POST['status_1'])){
+            $_REQUEST['status_1']=str_replace("all","All",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("N","New",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("I","Init",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("T","Chatting",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("P","Calling",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("R","Resolved",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("X","Deleted",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("B","Spam",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("C","Answered",$_REQUEST['status_1']);
+            $_REQUEST['status_1']=str_replace("W","Postponed",$_REQUEST['status_1']);
+            echo $_REQUEST['status_1'];}else{
+                echo "All Tickets"; 
+            }?>', '<?php 
+            if(isset($_POST['status_2'])){
+            $_REQUEST['status_2']=str_replace("all","All",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("N","New",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("I","Init",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("T","Chatting",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("P","Calling",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("R","Resolved",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("X","Deleted",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("B","Spam",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("C","Answered",$_REQUEST['status_2']);
+            $_REQUEST['status_2']=str_replace("W","Postponed",$_REQUEST['status_2']);
+                echo $_REQUEST['status_2'];}else{
+                    echo "Resolved"; 
+                }?>'],
+          <?php
+          foreach($total_number1 as $index => $value) {
+            // echo "['"."Name'".",".$total_number1[$index].",".$total_number2[$index]."],";
+            // echo "['"."Name'".",".$total_number1[$index].",".$total_number2[$index]."],";
+            echo "['".$agent_report[$index]["firstname"]." ".$agent_report[$index]["lastname"]."',".$total_number1[$index].",".$total_number2[$index]."],";
+          }
+        
+?>
+        ]);
+        var options = {
+          chart: {
+            title: 'Agents Performance',
+            subtitle: '',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+    </script>
+    <?php
+if(isset($_POST['status_1'])){  ?>
+<div class="columnchart" id="columnchart_material" style="width: 900px; height: 600px; margin-left:350px;"></div>
+<div class="optionsDiv" >
+        Filter By Agents
+        <select id="language" class="myoption"  onchange="document" data-table="customers-list" placeholder="Search">  
+            <option value="" selected>All</option>
+            <?php 
+           foreach($agent_report as $agent){
+            echo '<option value='.$agent["id"].'>'.$agent["firstname"]." ".$agent["lastname"].'</option>';
+           }
+            ?>
+        </select>
+    </div>
+<div class="container">
+<input type="text" class="search-input" data-table="customers-list" onchange="document"  placeholder="Search" />
+<i class="fa-sharp fa-solid fa-file-excel"></i>
+<span class="export">
+<input type="button" onclick="export_data()" value="Download"> </span>
+<table class="table table-striped mt32 customers-list" id="myTable">
+<thead>
+  <tr class="fixTableHead">
+    <!-- <th scope="col">#</th> -->
+    <!-- <th scope="col">ID</th> -->
+    <!-- <th scope="col">Owner Contact ID</th> -->
+    <th scope="col">Owner Email</th>
+    <th col-index = 1 scope="col">Owner
+    </th>
+    <!-- <th scope="col">Department ID</th> -->
+    <th scope="col">Agent ID </th>
+    <th scope="col">Status</th>
+    <th scope="col">Channel Type</th>
+    <th scope="col">date_created</th>
+    <th  scope="col">Date Changed</th>
+    <!-- <th scope="col">Date Due</th> -->
+    <th scope="col">Last Activity</th>
+    <th  class="subject_column" scope="col">Subject</th>
+    <th  class="Description" scope="col">Description</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+      <?php
+     
+  foreach($unique as $value ){
+      if(isset($_POST['dateFrom']) && isset($_POST['dateTo'])){
+        
+            ?>
+      <tr>
+      <!-- <td>  echo $value['id']  </td>  -->
+      <!-- <td>  echo $value['owner_contactid']  </td> -->
+      <td> <?php echo $value['owner_email']  ?></td>  
+      <td> <?php echo $value['owner_name']  ?></td> 
+      <!-- <td>  echo $value['departmentid']  </td>  -->
+      <td> <?php echo $value['agentid']  ?></td> 
+      <td> <?php echo $value['status']  ?></td> 
+      <td> <?php echo $value['channel_type']  ?></td> 
+      <td> <?php echo $value['date_created']  ?></td> 
+      <td> <?php echo $value['date_changed']  ?></td> 
+      <!-- <td>  echo $value['date_due']  </td>  -->
+      <td> <?php echo $value['last_activity_public']  ?></td> 
+      <td> <?php echo $value['subject']  ?></td> 
+      <td> <?php
+      foreach ($value['custom_fields'] as $code){
+          echo $code['code'] ." ". $code['value']; } 
+      // }
+  }
+}
+}
+
+  ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+function export_data(){
+	let data=document.getElementById('myTable');
+	var fp=XLSX.utils.table_to_book(data,);
+	XLSX.write(fp,{
+		bookType:'xlsx',
+		type:'base64'
+	});
+	XLSX.writeFile(fp, 'test.xlsx');
+}
+</script>
+<script>
+(function(document) {
+    'use strict';
+    console.log("done")
+    var TableFilter = (function(myArray) {
+        var search_input;
+        // var filter = documentss.getElementById("language");
+        function _onInputSearch(e) {
+            console.log("done2")
+            search_input = e.target;
+            var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+            console.log("done3")
+            myArray.forEach.call(tables, function(table) {
+                console.log("done4")
+                myArray.forEach.call(table.tBodies, function(tbody) {
+                  console.log("done5")
+                    myArray.forEach.call(tbody.rows, function(row) {
+                        var text_content = row.textContent.toLowerCase();
+                        var search_val = search_input.value.toLowerCase();                            
+                        row.style.display = (text_content.indexOf(search_val) > -1 ? '' : 'none');
+                        // var i;
+                    });
+                });
+            });
+        }
+        return {
+            init: function() {
+                var inputs = document.getElementsByClassName('myoption');
+                myArray.forEach.call(inputs, function(input) {
+                input.oninput = _onInputSearch;
+                });
+            }
+        };
+    })(Array.prototype);
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'complete') {
+            TableFilter.init();
+        }
+    });
+})(document);
+    </script>
+<script>
+        (function(document) {
+            'use strict';
+            var TableFilter = (function(myArray) {
+                var search_input;
+                function _onInputSearch(e) {
+                    search_input = e.target;
+                    var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                    myArray.forEach.call(tables, function(table) {
+                        myArray.forEach.call(table.tBodies, function(tbody) {
+                            myArray.forEach.call(tbody.rows, function(row) {
+                                var text_content = row.textContent.toLowerCase();
+                                var search_val = search_input.value.toLowerCase();
+                                row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                            });
+                        });
+                    });
+                }
+                return {
+                    init: function() {
+                        var inputs = document.getElementsByClassName('search-input');
+                        myArray.forEach.call(inputs, function(input) {
+                            input.oninput = _onInputSearch;
+                        });
+                    }
+                };
+            })(Array.prototype);
+            document.addEventListener('readystatechange', function() {
+                if (document.readyState === 'complete') {
+                    TableFilter.init();
+                }
+            });
+        })(document);
+    </script>
